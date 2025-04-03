@@ -28,8 +28,18 @@ class InfoController extends Controller
         $request->validate([
             'title' => 'required',
             'description' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-        Info::create($request->all());
+    
+        $data = $request->all();
+    
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('images', 'public');
+            $data['image'] = $imagePath;
+        }
+    
+        Info::create($data);
+    
         return redirect()->route('infos.index');
     }
 
@@ -48,8 +58,18 @@ class InfoController extends Controller
         $request->validate([
             'title' => 'required',
             'description' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-        $info->update($request->all());
+    
+        $data = $request->all();
+    
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('images', 'public');
+            $data['image'] = $imagePath;
+        }
+    
+        $info->update($data);
+    
         return redirect()->route('infos.index');
     }
 
